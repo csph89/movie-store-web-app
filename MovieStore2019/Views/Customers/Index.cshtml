@@ -1,0 +1,40 @@
+﻿@model IEnumerable<MovieStore2019.Models.Customer>
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Customers: @Model.Count()</h2>
+
+@if (!Model.Any())
+{
+    <p>We don't have any customers yet.</p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Membership Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <td>@customer.Name</td>
+                    <td>@customer.MembershipType.Name</td>
+                    <td>
+                        <span>@Html.ActionLink("Edit", "Edit", "Customers", new { id = customer.Id }, null) | </span>
+                        <span>@Html.ActionLink("Details", "Details", "Customers", new { id = customer.Id }, null)</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input class="btn btn-primary" type="button" value="New Customer" onclick="location.href='@Url.Action("Create", "Customers")'" />
+    <!--@Html.ActionLink("New Customer", "Create", "Customers", null, null)-->
+}
