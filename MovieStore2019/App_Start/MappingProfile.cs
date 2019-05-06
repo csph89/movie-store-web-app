@@ -16,7 +16,11 @@ namespace MovieStore2019.App_Start
             //We use Mapper.CreateMap generic method to create a mapping configuration between two types.
             //This method takes 2 parameters: the first is the Source, the second is the Target.
             Mapper.CreateMap<Customer, CustomerDto>(); //I want to be able to map a Customer to a CustomerDto.
-            Mapper.CreateMap<CustomerDto, Customer>(); //I also want to be able to map a CustomerDto to a Customer.
+            Mapper.CreateMap<CustomerDto, Customer>().ForMember(c => c.Id, opt => opt.Ignore()); //I also want to be able to map a CustomerDto to a Customer.
+
+            Mapper.CreateMap<Movie, MovieDto>();
+            Mapper.CreateMap<MovieDto, Movie>().ForMember(m => m.Id, opt => opt.Ignore());
+
 
             //When we call this CreateMap method AutoMapper uses reflection to scan these types, it finds their properties and maps them
             //based on their name. 
