@@ -13,12 +13,13 @@
 }
 else
 {
-    <table class="table table-bordered table-hover">
+    <table id="customers" class="table table-bordered table-hover">
         <thead>
             <tr>
                 <th>Customer</th>
                 <th>Membership Type</th>
-                <th>Action</th>
+                <!-- <th> Action </th> -->
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -27,9 +28,14 @@ else
                 <tr>
                     <td>@customer.Name</td>
                     <td>@customer.MembershipType.Name</td>
+                    <!--
+                        <td>
+                            <span>@Html.ActionLink("Edit", "Edit", "Customers", new { id = customer.Id }, null) | </span>
+                            <span>@Html.ActionLink("Details", "Details", "Customers", new { id = customer.Id }, null)</span>
+                        </td>
+                    -->
                     <td>
-                        <span>@Html.ActionLink("Edit", "Edit", "Customers", new { id = customer.Id }, null) | </span>
-                        <span>@Html.ActionLink("Details", "Details", "Customers", new { id = customer.Id }, null)</span>
+                        <button data-customer-id="@customer.Id" class="btn-link js-delete">Delete</button>
                     </td>
                 </tr>
             }
@@ -37,4 +43,29 @@ else
     </table>
     <input class="btn btn-primary" type="button" value="New Customer" onclick="location.href='@Url.Action("Create", "Customers")'" />
     <!--@Html.ActionLink("New Customer", "Create", "Customers", null, null)-->
+}
+
+@section scripts
+{
+    <script>
+    $(document).ready(function () {
+            //We have to choose the table with id=customers and after that all the elements with class=js-delete
+            //Then we use jQuery on() method to handle the click event with a callback function
+            $("#customers .js-delete").on("click", function () { 
+                var button = $(this); //To this anaferetai sto element pou vrethike me id=customers kai class=js-delete
+                //The confirm() function displays a confirmation box and returns true or false
+                if (confirm("Are you sure you want to delete this customer?")) {
+                    //Here we call our API using jQuery ajax() method and pass an object which contains the information of the request
+                    $.ajax({
+                        url: "/api/customers/" + button.attr("data-customer-id"),
+                        method: "DELETE",
+                        success: function () {
+                            //Here we delete the selected customer from the list
+                            button.parents("tr").remove();
+                        }
+                    })
+                }
+            });
+        });
+    </script>
 }
